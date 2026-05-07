@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — ABC Company</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f9;
+            color: #222;
+        }
+        .user-bar {
+            max-width: 1100px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .user-bar .spacer { flex: 1; }
+        .user-bar a { color: #7dc0e8; text-decoration: none; font-weight: 600; }
+        .user-bar a:hover { text-decoration: underline; }
+        .user-bar button {
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.85rem;
+        }
+        .user-bar button:hover { background: rgba(255,255,255,0.25); }
+        .layout { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
+        .card h2 { margin: 0 0 6px; font-size: 1.15rem; color: #2c3e50; }
+        .card .sub { margin: 0 0 18px; font-size: 0.9rem; color: #666; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+        .form-field { display: flex; flex-direction: column; gap: 4px; }
+        label { font-size: 0.82rem; font-weight: 600; color: #444; }
+        input[type="text"], input[type="number"], select {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 0.92rem;
+            background: #fff;
+        }
+        input:focus, select:focus { outline: 2px solid #3498db; border-color: transparent; }
+        .form-actions { grid-column: 1 / -1; display: flex; gap: 12px; align-items: center; margin-top: 6px; }
+        .btn-primary {
+            padding: 10px 24px;
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background: #3e5871; }
+        .form-msg { font-size: 0.9rem; }
+        .form-msg.ok { color: #1a7a4a; }
+        .form-msg.err { color: #b00020; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 8px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #e8e8ef; text-align: left; vertical-align: top; }
+        th { background: #2c3e50; color: #fff; font-weight: 600; }
+        tbody tr:hover { background: #fafafc; }
+        .num { text-align: right; white-space: nowrap; }
+        .muted { color: #888; font-size: 0.85rem; }
+        .btn-delete {
+            padding: 5px 12px;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.82rem;
+        }
+        .btn-delete:hover { background: #a93226; }
+    </style>
+</head>
+<body>
+    <div class="user-bar">
+        <span>Admin Panel &mdash; <strong id="user-name">…</strong></span>
+        <span class="spacer"></span>
+        <a href="/index.html">← Dashboard</a>
+        <button id="logout-btn">Logout</button>
+    </div>
+
+    <div class="layout">
+
+        <div class="card">
+            <h2>Add New Vehicle</h2>
+            <p class="sub">All fields marked * are required.</p>
+            <form id="add-form">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="f-brand">Brand *</label>
+                        <input type="text" id="f-brand" placeholder="e.g. Toyota" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-model">Model *</label>
+                        <input type="text" id="f-model" placeholder="e.g. Camry" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-year">Year *</label>
+                        <input type="number" id="f-year" min="1900" max="2100" placeholder="2024" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-mileage">Mileage *</label>
+                        <input type="number" id="f-mileage" min="0" placeholder="0" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-price">Price ($) *</label>
+                        <input type="number" id="f-price" min="1" step="0.01" placeholder="25000" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-condition">Condition *</label>
+                        <select id="f-condition" required>
+                            <option value="">— select —</option>
+                            <option>certified pre-owned</option>
+                            <option>no accidents</option>
+                            <option>clean title</option>
+                            <option>one owner</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-body">Body Style *</label>
+                        <select id="f-body" required>
+                            <option value="">— select —</option>
+                            <option>sedan</option>
+                            <option>SUV</option>
+                            <option>truck</option>
+                            <option>van</option>
+                            <option>coupe</option>
+                            <option>hatchback</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-fuel">Fuel Type *</label>
+                        <select id="f-fuel" required>
+                            <option value="">— select —</option>
+                            <option>EV</option>
+                            <option>PHEV</option>
+                            <option>hybrid</option>
+                            <option>gas</option>
+                            <option>diesel</option>
+                            <option>hydrogen</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-drivetrain">Drivetrain *</label>
+                        <select id="f-drivetrain" required>
+                            <option value="">— select —</option>
+                            <option>FWD</option>
+                            <option>RWD</option>
+                            <option>AWD</option>
+                            <option>4WD</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-transmission">Transmission *</label>
+                        <select id="f-transmission" required>
+                            <option value="">— select —</option>
+                            <option>automatic</option>
+                            <option>CVT</option>
+                            <option>manual</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-store">Store *</label>
+                        <select id="f-store" required>
+                            <option value="">— select —</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-exterior">Exterior Color</label>
+                        <input type="text" id="f-exterior" placeholder="e.g. White">
+                    </div>
+                    <div class="form-field">
+                        <label for="f-seats">Seating Capacity</label>
+                        <input type="number" id="f-seats" min="1" max="15" placeholder="5">
+                    </div>
+                    <div class="form-field">
+                        <label for="f-mpg">MPG (gas/hybrid)</label>
+                        <input type="number" id="f-mpg" min="1" placeholder="30">
+                    </div>
+                    <div class="form-field">
+                        <label for="f-range">Range in miles (EV)</label>
+                        <input type="number" id="f-range" min="1" placeholder="300">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Add Vehicle</button>
+                        <span id="add-msg" class="form-msg"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Available Vehicles</h2>
+            <p class="sub">Unsold vehicles in inventory. Sold vehicles cannot be deleted.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>Year</th>
+                        <th class="num">Price</th>
+                        <th>Body / Fuel</th>
+                        <th>Store</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="admin-vehicles-body">
+                    <tr><td colspan="7" class="muted">Loading…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        async function checkAuth() {
+            const res = await fetch('/api/me');
+            if (!res.ok) { location.href = '/login.html'; return null; }
+            const user = await res.json();
+            if (user.role !== 'Admin') { location.href = '/index.html'; return null; }
+            return user;
+        }
+
+        function esc(s) {
+            if (s == null || s === '') return '';
+            return String(s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function formatMoney(n) {
+            if (n == null) return '—';
+            return Number(n).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+        }
+
+        async function loadStores() {
+            const res = await fetch('/api/stores');
+            if (!res.ok) return;
+            const stores = await res.json();
+            const sel = document.getElementById('f-store');
+            for (const s of stores) {
+                const opt = document.createElement('option');
+                opt.value = s.StoreID;
+                opt.textContent = s.StoreName;
+                sel.appendChild(opt);
+            }
+        }
+
+        async function loadAdminVehicles() {
+            const tbody = document.getElementById('admin-vehicles-body');
+            tbody.innerHTML = '<tr><td colspan="7" class="muted">Loading…</td></tr>';
+            const res = await fetch('/api/admin/vehicles');
+            if (!res.ok) {
+                tbody.innerHTML = '<tr><td colspan="7" style="color:#b00020">Failed to load vehicles.</td></tr>';
+                return;
+            }
+            const data = await res.json();
+            if (!data.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="muted">No available vehicles.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            for (const v of data) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="muted">${esc(String(v.VehicleID))}</td>
+                    <td><strong>${esc(v.Brand)} ${esc(v.Model)}</strong></td>
+                    <td>${esc(String(v.Year))}</td>
+                    <td class="num">${formatMoney(v.Price)}</td>
+                    <td>${esc(v.BodyStyle)} · ${esc(v.FuelType)}</td>
+                    <td>${esc(v.StoreName)}</td>
+                    <td><button class="btn-delete" data-id="${esc(String(v.VehicleID))}">Delete</button></td>
+                `;
+                tbody.appendChild(tr);
+            }
+
+            tbody.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    if (!confirm(`Delete vehicle ID ${id}? This cannot be undone.`)) return;
+                    const r = await fetch(`/api/admin/vehicles/${id}`, { method: 'DELETE' });
+                    const d = await r.json();
+                    if (!r.ok) { alert(d.error || 'Delete failed'); return; }
+                    loadAdminVehicles();
+                });
+            });
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            location.href = '/login.html';
+        });
+
+        document.getElementById('add-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const msg = document.getElementById('add-msg');
+            msg.className = 'form-msg';
+            msg.textContent = 'Saving…';
+
+            const body = {
+                Brand: document.getElementById('f-brand').value.trim(),
+                Model: document.getElementById('f-model').value.trim(),
+                Year: document.getElementById('f-year').value,
+                Mileage: document.getElementById('f-mileage').value,
+                Price: document.getElementById('f-price').value,
+                VehicleCondition: document.getElementById('f-condition').value,
+                BodyStyle: document.getElementById('f-body').value,
+                FuelType: document.getElementById('f-fuel').value,
+                Drivetrain: document.getElementById('f-drivetrain').value,
+                Transmission: document.getElementById('f-transmission').value,
+                StoreID: document.getElementById('f-store').value,
+                ExteriorColor: document.getElementById('f-exterior').value.trim() || null,
+                SeatingCapacity: document.getElementById('f-seats').value || null,
+                MPG: document.getElementById('f-mpg').value || null,
+                RangeMiles: document.getElementById('f-range').value || null
+            };
+
+            const res = await fetch('/api/admin/vehicles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                msg.className = 'form-msg err';
+                msg.textContent = data.error || 'Failed to add vehicle';
+                return;
+            }
+            msg.className = 'form-msg ok';
+            msg.textContent = `Vehicle #${data.VehicleID} added successfully!`;
+            e.target.reset();
+            loadAdminVehicles();
+        });
+
+        (async () => {
+            const user = await checkAuth();
+            if (!user) return;
+            document.getElementById('user-name').textContent = user.name;
+            await Promise.all([loadStores(), loadAdminVehicles()]);
+        })();
+    </script>
+</body>
+</html>
