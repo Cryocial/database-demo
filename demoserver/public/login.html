@@ -22,13 +22,13 @@
             border-radius: 10px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 360px;
+            max-width: 380px;
         }
         h1 { margin: 0 0 4px; font-size: 1.4rem; color: #2c3e50; }
-        .sub { margin: 0 0 28px; color: #666; font-size: 0.9rem; }
-        .field { margin-bottom: 16px; }
+        .sub { margin: 0 0 24px; color: #666; font-size: 0.9rem; }
+        .field { margin-bottom: 14px; }
         label { display: block; font-size: 0.85rem; color: #444; margin-bottom: 6px; font-weight: 600; }
-        input[type="email"], input[type="password"] {
+        input[type="text"], input[type="email"], input[type="password"] {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #ccc;
@@ -37,7 +37,7 @@
             font-size: 0.95rem;
         }
         input:focus { outline: 2px solid #3498db; border-color: transparent; }
-        button[type="submit"] {
+        .btn-submit {
             width: 100%;
             padding: 12px;
             background: #2c3e50;
@@ -48,58 +48,132 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 6px;
         }
-        button[type="submit"]:hover { background: #3e5871; }
-        .error { color: #b00020; font-size: 0.88rem; margin: 10px 0 0; }
-        .demo-hint {
-            margin-top: 24px;
-            padding: 12px;
-            background: #f0f4f8;
-            border-radius: 6px;
-            font-size: 0.82rem;
+        .btn-submit:hover { background: #3e5871; }
+        .msg { font-size: 0.88rem; margin: 10px 0 0; }
+        .msg.error { color: #b00020; }
+        .msg.ok { color: #1a7a4a; }
+        .toggle-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.88rem;
             color: #555;
-            line-height: 1.6;
         }
-        .demo-hint strong { color: #2c3e50; }
+        .toggle-link a { color: #2c3e50; font-weight: 600; cursor: pointer; text-decoration: underline; }
+        .hint { font-size: 0.78rem; color: #999; margin-top: 6px; }
+        [hidden] { display: none !important; }
+        .pw-wrap { position: relative; }
+        .pw-wrap input { padding-right: 40px; }
+        .pw-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: #888;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .pw-toggle:hover { color: #444; }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>ABC Company</h1>
-        <p class="sub">Used Car Management — sign in to continue</p>
-        <form id="login-form">
-            <div class="field">
-                <label for="email">Email</label>
-                <input type="email" id="email" autocomplete="username" required placeholder="your@email.com">
-            </div>
-            <div class="field">
-                <label for="password">Password</label>
-                <input type="password" id="password" autocomplete="current-password" required>
-            </div>
-            <p id="error-msg" class="error" hidden></p>
-            <button type="submit">Log In</button>
-        </form>
-        <div class="demo-hint">
-            <strong>Demo admin account:</strong><br>
-            Email: <code>erin.admin@abc.com</code><br>
-            Password: <code>Admin@2025</code>
+
+        <!-- LOGIN FORM -->
+        <div id="view-login">
+            <p class="sub">Used Car Management — sign in to continue</p>
+            <form id="login-form">
+                <div class="field">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" autocomplete="username" required placeholder="your@email.com">
+                </div>
+                <div class="field">
+                    <label for="login-password">Password</label>
+                    <div class="pw-wrap">
+                        <input type="password" id="login-password" autocomplete="current-password" required>
+                        <button type="button" class="pw-toggle" aria-label="Show password" data-target="login-password">&#128065;</button>
+                    </div>
+                </div>
+                <p id="login-msg" class="msg error" hidden></p>
+                <button type="submit" class="btn-submit">Log In</button>
+            </form>
+            <p class="toggle-link">Don't have an account? <a id="go-register">Create one</a></p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="view-register" hidden>
+            <p class="sub">Create a new account</p>
+            <form id="register-form">
+                <div class="field">
+                    <label for="reg-first">First Name</label>
+                    <input type="text" id="reg-first" required placeholder="Jane">
+                </div>
+                <div class="field">
+                    <label for="reg-last">Last Name</label>
+                    <input type="text" id="reg-last" required placeholder="Doe">
+                </div>
+                <div class="field">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" autocomplete="username" required placeholder="your@email.com">
+                </div>
+                <div class="field">
+                    <label for="reg-password">Password</label>
+                    <div class="pw-wrap">
+                        <input type="password" id="reg-password" autocomplete="new-password" required>
+                        <button type="button" class="pw-toggle" aria-label="Show password" data-target="reg-password">&#128065;</button>
+                    </div>
+                    <p class="hint">8+ characters with uppercase, lowercase, number, and special character (e.g. Admin123!)</p>
+                </div>
+                <p id="register-msg" class="msg" hidden></p>
+                <button type="submit" class="btn-submit">Create Account</button>
+            </form>
+            <p class="toggle-link">Already have an account? <a id="go-login">Sign in</a></p>
         </div>
     </div>
+
     <script>
         fetch('/api/me').then(r => { if (r.ok) location.href = '/index.html'; });
 
+        document.querySelectorAll('.pw-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(btn.dataset.target);
+                const showing = input.type === 'text';
+                input.type = showing ? 'password' : 'text';
+                btn.textContent = showing ? '\u{1F441}' : '\u{1F576}';
+                btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+            });
+        });
+
+        const viewLogin = document.getElementById('view-login');
+        const viewRegister = document.getElementById('view-register');
+
+        document.getElementById('go-register').addEventListener('click', () => {
+            viewLogin.hidden = true;
+            viewRegister.hidden = false;
+        });
+        document.getElementById('go-login').addEventListener('click', () => {
+            viewRegister.hidden = true;
+            viewLogin.hidden = false;
+        });
+
         document.getElementById('login-form').addEventListener('submit', async e => {
             e.preventDefault();
-            const errEl = document.getElementById('error-msg');
+            const errEl = document.getElementById('login-msg');
             errEl.hidden = true;
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: document.getElementById('email').value,
-                        password: document.getElementById('password').value
+                        email: document.getElementById('login-email').value,
+                        password: document.getElementById('login-password').value
                     })
                 });
                 const data = await res.json();
@@ -112,6 +186,36 @@
             } catch {
                 errEl.textContent = 'Network error — is the server running?';
                 errEl.hidden = false;
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const msgEl = document.getElementById('register-msg');
+            msgEl.className = 'msg';
+            msgEl.textContent = 'Creating account…';
+            msgEl.hidden = false;
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName: document.getElementById('reg-first').value.trim(),
+                        lastName: document.getElementById('reg-last').value.trim(),
+                        email: document.getElementById('reg-email').value.trim(),
+                        password: document.getElementById('reg-password').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    msgEl.className = 'msg error';
+                    msgEl.textContent = data.error || 'Registration failed';
+                    return;
+                }
+                location.href = '/index.html';
+            } catch {
+                msgEl.className = 'msg error';
+                msgEl.textContent = 'Network error — is the server running?';
             }
         });
     </script>

@@ -203,6 +203,10 @@ UPDATE UserInfo SET StoreID = 2 WHERE UserID = 2;
 UPDATE UserInfo SET StoreID = 3 WHERE UserID = 3;
 UPDATE UserInfo SET StoreID = 4 WHERE UserID = 4;
 
+-- Demo admin account (first name: admin, last name: admin)
+INSERT INTO UserInfo (FirstName,LastName,Phone,Email,Password,AddressID,UserRole,StoreID) VALUES
+ ('admin','admin','000-000-0000','admin@admin.com','Admin123!',1,'Admin',NULL);
+
 -- Sellers (staff that work at a store)
 INSERT INTO UserInfo (FirstName,LastName,Phone,Email,Password,AddressID,UserRole,StoreID) VALUES
  ('Frank','Garcia','909-555-3001','frank.sell@abc.com','Seller$01',18,'Seller',3),  -- 6

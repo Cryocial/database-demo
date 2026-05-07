@@ -101,6 +101,36 @@ app.get('/api/me', (req, res) => {
     res.json(req.session.user);
 });
 
+app.post('/api/register', (req, res) => {
+    const { firstName, lastName, email, password } = req.body || {};
+    if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    pool.query('SELECT UserID FROM UserInfo WHERE Email = ?', [email], (err, rows) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        if (rows.length) return res.status(409).json({ error: 'Email is already in use' });
+
+        pool.query(
+            `INSERT INTO UserInfo (FirstName, LastName, Phone, Email, Password, AddressID, UserRole)
+             VALUES (?, ?, '000-000-0000', ?, ?, 1, 'Buyer')`,
+            [firstName, lastName, email, password],
+            (err, result) => {
+                if (err) {
+                    if (err.code === 'ER_CHECK_CONSTRAINT_VIOLATED') {
+                        return res.status(400).json({
+                            error: 'Password must be 8+ characters and include uppercase, lowercase, a number, and a special character (e.g. Admin123!)'
+                        });
+                    }
+                    console.error('Register error:', err);
+                    return res.status(500).json({ error: err.message });
+                }
+                req.session.user = { id: result.insertId, name: `${firstName} ${lastName}`, role: 'Buyer' };
+                res.json({ name: req.session.user.name, role: 'Buyer' });
+            }
+        );
+    });
+});
+
 // ========================================
 // AUTH MIDDLEWARE (protects all /api/* below)
 // ========================================
