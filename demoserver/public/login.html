@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Vibecoded Cars Ltd</title>
+    <title>Login — ABC Company</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -84,7 +84,7 @@
 </head>
 <body>
     <div class="card">
-        <h1>Vibecoded Cars Ltd</h1>
+        <h1>ABC Company</h1>
 
         <!-- LOGIN FORM -->
         <div id="view-login">
@@ -143,7 +143,10 @@
         document.querySelectorAll('.pw-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
                 const input = document.getElementById(btn.dataset.target);
-                input.type = input.type === 'password' ? 'text' : 'password';
+                const showing = input.type === 'text';
+                input.type = showing ? 'password' : 'text';
+                btn.textContent = showing ? '\u{1F441}' : '\u{1F576}';
+                btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
             });
         });
 
