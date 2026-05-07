@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibecode Visionaries — Demo</title>
+    <title>Vibecoded Cars Ltd — Demo</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -68,16 +68,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.08);
         }
-        .dashboard-card h2 {
-            margin: 0 0 6px;
-            font-size: 1.15rem;
-            color: #2c3e50;
-        }
-        .dashboard-card .sub {
-            margin: 0 0 14px;
-            font-size: 0.9rem;
-            color: #666;
-        }
+        .dashboard-card h2 { margin: 0 0 6px; font-size: 1.15rem; color: #2c3e50; }
+        .dashboard-card .sub { margin: 0 0 14px; font-size: 0.9rem; color: #666; }
         .toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -130,16 +122,11 @@
             text-align: left;
             vertical-align: top;
         }
-        th {
-            background-color: #2c3e50;
-            color: #fff;
-            font-weight: 600;
-        }
+        th { background-color: #2c3e50; color: #fff; font-weight: 600; }
         tbody tr:hover { background: #fafafc; }
         .num { text-align: right; white-space: nowrap; }
         .muted { color: #888; font-size: 0.85rem; }
         .error { color: #b00020; }
-
         .view-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -161,16 +148,9 @@
             color: #fff;
             border-color: #2c3e50;
         }
-        .view-tab:focus-visible {
-            outline: 2px solid #3498db;
-            outline-offset: 2px;
-        }
+        .view-tab:focus-visible { outline: 2px solid #3498db; outline-offset: 2px; }
         .view-panel[hidden] { display: none !important; }
-        .view-panel h3 {
-            margin: 0 0 6px;
-            font-size: 1.05rem;
-            color: #2c3e50;
-        }
+        .view-panel h3 { margin: 0 0 6px; font-size: 1.05rem; color: #2c3e50; }
         .nav-button {
             display: inline-block;
             padding: 12px 24px;
@@ -183,11 +163,98 @@
             transition: background-color 0.2s, transform 0.1s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .nav-button:hover {
-            background-color: #3e5871;
-            transform: translateY(-1px);
-        }
+        .nav-button:hover { background-color: #3e5871; transform: translateY(-1px); }
         .nav-button:active { transform: translateY(0); }
+
+        /* Buy button */
+        .btn-buy {
+            padding: 5px 14px;
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .btn-buy:hover { background: #229954; }
+        .btn-buy:disabled { background: #aaa; cursor: default; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay[hidden] { display: none !important; }
+        .modal {
+            background: #fff;
+            border-radius: 10px;
+            padding: 32px;
+            width: 90%;
+            max-width: 460px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-wide { max-width: 680px; }
+        .modal h2 { margin: 0 0 4px; color: #2c3e50; font-size: 1.2rem; }
+        .modal .modal-company { color: #888; font-size: 0.85rem; margin: 0 0 20px; }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.92rem;
+        }
+        .receipt-row .rl { color: #666; }
+        .receipt-row .rv { font-weight: 600; }
+        .receipt-divider { border: none; border-top: 2px solid #2c3e50; margin: 12px 0; }
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .modal-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+        .btn-primary {
+            padding: 10px 20px;
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+        }
+        .btn-primary:hover { background: #3e5871; }
+        .btn-secondary {
+            padding: 10px 20px;
+            background: #f0f1f5;
+            color: #2c3e50;
+            border: 1px solid #c5cad4;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+        }
+        .btn-secondary:hover { background: #e4e6ed; }
+
+        /* Receipt lookup table */
+        .receipt-list-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .receipt-list-table th, .receipt-list-table td { padding: 8px 6px; border-bottom: 1px solid #eee; text-align: left; }
+        .receipt-list-table th { background: #2c3e50; color: #fff; }
+
+        @media print {
+            body > *:not(#receipt-modal) { display: none !important; }
+            #receipt-modal { position: static !important; background: none !important; }
+            .modal-actions { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -196,17 +263,17 @@
         <span>Welcome, <strong id="user-name">…</strong></span>
         <span id="user-role" class="role-badge">…</span>
         <span class="spacer"></span>
+        <button id="receipts-btn">My Receipts</button>
         <a id="admin-link" href="/admin.html" hidden>Admin Panel</a>
         <button id="logout-btn">Logout</button>
     </div>
 
     <header class="page-header">
-        <h1>Vibecode Visionaries — Used Car Management (demo)</h1>
+        <h1>Vibecoded Cars Ltd — Used Car Management (demo)</h1>
         <p>
-            Presentation build: live reads from MySQL (<code>Cars</code>). Browse available vehicles by store ZIP code,
-            review Part&nbsp;B reporting views (inventory by body type; use the buttons below to switch between
-            <strong>Sales</strong>, <strong>Performance</strong>, and <strong>Transactions</strong>),
-            and browse completed sales in the Transactions tab.
+            Presentation build: live reads from MySQL (<code>Cars</code>). Browse available vehicles, filter by store ZIP code,
+            make, body style, price, and year. Use the buttons below to switch between
+            <strong>Sales</strong>, <strong>Performance</strong>, and <strong>Transactions</strong> reports.
         </p>
     </header>
 
@@ -214,7 +281,7 @@
 
         <section class="dashboard-card" aria-labelledby="browse-title">
             <h2 id="browse-title">Available vehicles</h2>
-            <p class="sub">Filter by dealership ZIP code and/or vehicle attributes.</p>
+            <p class="sub">Filter by dealership ZIP code and/or vehicle attributes. Click Buy to purchase.</p>
             <div class="toolbar">
                 <label for="zip-filter">Store ZIP</label>
                 <select id="zip-filter" aria-label="Filter by ZIP code">
@@ -257,10 +324,11 @@
                             <th>Condition / body</th>
                             <th>Powertrain</th>
                             <th>Store</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="vehicles-body">
-                        <tr><td colspan="6" class="muted">Loading…</td></tr>
+                        <tr><td colspan="7" class="muted">Loading…</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -296,15 +364,12 @@
             </div>
 
             <div id="panel-sales" class="view-panel" role="tabpanel" aria-labelledby="tab-sales">
-                <h3 id="sales-title">Sales this month by body style</h3>
+                <h3>Sales this month by body style</h3>
                 <p class="sub"><code>MonthlySalesByBodyType</code> — units sold in the current calendar month.</p>
                 <table>
                     <thead>
                         <tr>
-                            <th>Store</th>
-                            <th>Address</th>
-                            <th>Manager</th>
-                            <th>Body style</th>
+                            <th>Store</th><th>Address</th><th>Manager</th><th>Body style</th>
                             <th class="num">Sold (month)</th>
                         </tr>
                     </thead>
@@ -315,15 +380,12 @@
             </div>
 
             <div id="panel-performance" class="view-panel" role="tabpanel" aria-labelledby="tab-performance" hidden>
-                <h3 id="hp-title">High-performing stores</h3>
+                <h3>High-performing stores</h3>
                 <p class="sub"><code>HighPerformingStores</code> — locations with more than 30 sales in a single month.</p>
                 <table>
                     <thead>
                         <tr>
-                            <th>Store</th>
-                            <th>Address</th>
-                            <th>Manager</th>
-                            <th>Month</th>
+                            <th>Store</th><th>Address</th><th>Manager</th><th>Month</th>
                             <th class="num">Cars sold</th>
                         </tr>
                     </thead>
@@ -334,15 +396,12 @@
             </div>
 
             <div id="panel-transactions" class="view-panel" role="tabpanel" aria-labelledby="tab-transactions" hidden>
-                <h3 id="tx-title">Recent transactions</h3>
-                <p class="sub">Sample sales: price, date, buyer, and vehicle (business rule: record transaction details).</p>
+                <h3>Recent transactions</h3>
+                <p class="sub">Sample sales: price, date, buyer, and vehicle.</p>
                 <table>
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Buyer</th>
-                            <th>Vehicle</th>
-                            <th>Store</th>
+                            <th>Date</th><th>Buyer</th><th>Vehicle</th><th>Store</th>
                             <th class="num">Sale price</th>
                         </tr>
                     </thead>
@@ -354,13 +413,36 @@
         </section>
 
     </main>
+
     <section class="layout" style="margin-top: 20px; margin-bottom: 40px;">
         <div style="display: flex; justify-content: center;">
-            <a href="new-page.html" class="nav-button">
-                The End
-            </a>
+            <a href="new-page.html" class="nav-button">The End</a>
         </div>
     </section>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="modal-overlay" hidden>
+        <div class="modal">
+            <p class="modal-company">Vibecoded Cars Ltd</p>
+            <h2>Purchase Receipt</h2>
+            <div id="receipt-content"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="print-receipt-btn">Print Receipt</button>
+                <button class="btn-secondary" id="close-receipt-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Receipts Modal -->
+    <div id="receipts-modal" class="modal-overlay" hidden>
+        <div class="modal modal-wide">
+            <h2>My Receipts</h2>
+            <div id="receipts-list" style="margin-top:16px;"></div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="close-receipts-btn">Close</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

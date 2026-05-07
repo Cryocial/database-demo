@@ -274,6 +274,65 @@ app.get('/api/transactions', (req, res) => {
     });
 });
 
+// Buy a vehicle
+app.post('/api/buy', (req, res) => {
+    const { vehicleID } = req.body || {};
+    const buyerID = req.session.user.id;
+    if (!vehicleID) return res.status(400).json({ error: 'vehicleID is required' });
+
+    const checkQuery = `
+        SELECT v.VehicleID, v.Brand, v.Model, v.Year, v.Price, v.BodyStyle, s.StoreName
+        FROM Vehicle v
+        JOIN Store s ON v.StoreID = s.StoreID
+        LEFT JOIN Transactions t ON t.VehicleID = v.VehicleID
+        WHERE v.VehicleID = ? AND t.TransID IS NULL
+    `;
+    pool.query(checkQuery, [vehicleID], (err, rows) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        if (!rows.length) return res.status(409).json({ error: 'Vehicle is no longer available' });
+
+        const v = rows[0];
+        pool.query(
+            'INSERT INTO Transactions (BuyerID, VehicleID, SalePrice, PurchaseDate) VALUES (?, ?, ?, NOW())',
+            [buyerID, v.VehicleID, v.Price],
+            (err, result) => {
+                if (err) {
+                    console.error('Buy error:', err);
+                    return res.status(500).json({ error: err.message });
+                }
+                res.json({
+                    transID: result.insertId,
+                    purchaseDate: new Date().toISOString(),
+                    buyerName: req.session.user.name,
+                    brand: v.Brand,
+                    model: v.Model,
+                    year: v.Year,
+                    bodyStyle: v.BodyStyle,
+                    storeName: v.StoreName,
+                    salePrice: v.Price
+                });
+            }
+        );
+    });
+});
+
+// My receipts
+app.get('/api/my-receipts', (req, res) => {
+    const query = `
+        SELECT t.TransID, t.SalePrice, t.PurchaseDate,
+               v.Brand, v.Model, v.Year, v.BodyStyle, s.StoreName
+        FROM Transactions t
+        JOIN Vehicle v ON t.VehicleID = v.VehicleID
+        JOIN Store s ON v.StoreID = s.StoreID
+        WHERE t.BuyerID = ?
+        ORDER BY t.PurchaseDate DESC
+    `;
+    pool.query(query, [req.session.user.id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        res.json(results);
+    });
+});
+
 app.get('/api/stores', (req, res) => {
     pool.query('SELECT StoreID, StoreName FROM Store ORDER BY StoreName', (err, results) => {
         if (err) return res.status(500).json({ error: 'Database error' });
