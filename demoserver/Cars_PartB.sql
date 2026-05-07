@@ -188,7 +188,7 @@ INSERT INTO UserInfo (FirstName,LastName,Phone,Email,Password,AddressID,UserRole
  ('Brian','Patel','714-555-1002','brian.mgr@abc.com',   'Manager#1B',6,'Manager',NULL),  -- 2
  ('Carla','Smith','909-555-1003','carla.mgr@abc.com',   'Manager#1C',7,'Manager',NULL),  -- 3
  ('Derek','Lopez','213-555-1004','derek.mgr@abc.com',   'Manager#1D',8,'Manager',NULL),  -- 4
- ('Erin', 'Chen', '949-555-2001','erin.admin@abc.com',  'Admin@2025',9,'Admin',  NULL); -- 5
+ ('Admin', 'Admin', '000-000-0000','admin@abc.com',  'Admin123',9,'Admin',  NULL); -- 5
 
 -- Stores (each managed by one of the managers above)
 INSERT INTO Store (StoreName, AddressID, ManagerID) VALUES
